@@ -1,12 +1,9 @@
 version: '3.5'
 services:
-  proxy:
+  recorder:
     #restart: unless-stopped
     build:
       context: .
     #user: "1000"
     environment:
-      - CAMERA_CAM1_HOST=user:pass@192.168.1.50
-      - CAMERA_CAM2_HOST=user:pass@192.168.1.51
-    ports:
-      - 8080:8080
+      - PASS=false
