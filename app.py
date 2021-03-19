@@ -99,7 +99,7 @@ def record(record_config):
             }
             filename = record_config['fileFormat'].format(**filenameParams)
             dirname = os.path.dirname(filename)
-            response = requests.get(record_config['url'])
+            response = requests.get(record_config['url'], timeout=30)
             response.raise_for_status()
             if not os.path.exists(dirname):
                 os.makedirs(dirname)
