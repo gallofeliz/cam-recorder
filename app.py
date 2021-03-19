@@ -2,6 +2,7 @@ import threading, sched, time, requests, os, re, glob, logging
 from datetime import datetime
 from pythonjsonlogger import jsonlogger
 from PIL import Image
+from gallocloud_utils.scheduling import get_next_schedule_time
 
 logging.basicConfig(level=os.environ.get('LOG_LEVEL', 'INFO').upper())
 
@@ -52,9 +53,9 @@ def load_config():
             'name': name,
             'type': values['TYPE'],
             'url': values['URL'],
-            'schedule': values['SCHEDULE'],
+            'schedule': values['SCHEDULE'].split(';'),
             'keepTime': values['KEEP_TIME'], # None to disable ? We will see ...
-            'pruneSchedule': values['PRUNE_SCHEDULE'],
+            'pruneSchedule': values['PRUNE_SCHEDULE'].split(';'),
             'fileFormat': values['FILE_FORMAT']
         }
         if 'THUMBS_SIZE' in values or 'THUMBS_FILE_FORMAT' in values:
@@ -88,7 +89,7 @@ def record(record_config):
             logging.exception('Thumb error', extra={'action': 'snapshot-thumb', 'status': 'failure', 'record': record_config['name']})
 
     def do_snapshot():
-        s.enter(convert_to_seconds(record_config['schedule']), 1, do_snapshot)
+        s.enterabs(get_next_schedule_time(record_config['schedule']), 1, do_snapshot)
         try:
             logging.info('Snaphot start', extra={'action': 'snapshot', 'status': 'starting', 'record': record_config['name']})
             now = datetime.now()
@@ -118,7 +119,7 @@ def prune(record_config):
     s = sched.scheduler(time.time, time.sleep)
 
     def do_prune():
-        s.enter(convert_to_seconds(record_config['pruneSchedule']), 1, do_prune)
+        s.enterabs(get_next_schedule_time(record_config['pruneSchedule']), 1, do_prune)
         try:
             logging.info('Prune start', extra={'action': 'prune', 'status': 'starting', 'record': record_config['name']})
             globs_ = [
