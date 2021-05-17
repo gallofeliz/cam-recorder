@@ -17,11 +17,12 @@ services:
 
       - RECORD_CAM2-SNAPSHOT_TYPE=snapshot
       - RECORD_CAM2-SNAPSHOT_URL=http://user:pass@192.168.1.50/api/v1/snap.cgi?chn=0
-      - RECORD_CAM2-SNAPSHOT_SCHEDULE=100s
+      - RECORD_CAM2-SNAPSHOT_SCHEDULE=15s
       - RECORD_CAM2-SNAPSHOT_KEEP_TIME=5s
       - RECORD_CAM2-SNAPSHOT_PRUNE_SCHEDULE=1h
       - RECORD_CAM2-SNAPSHOT_FILE_FORMAT=/tmp/records/cam2/{date}/{datetime}.jpg
       - RECORD_CAM2-SNAPSHOT_THUMBS_SIZE=768,
       - RECORD_CAM2-SNAPSHOT_THUMBS_FILE_FORMAT=/tmp/records/cam2/{date}/thumbs/{datetime}.jpg
+      - RECORD_CAM2-SNAPSHOT_THUMBS_QUALITY=20
 
       #- LOG_LEVEL=debug

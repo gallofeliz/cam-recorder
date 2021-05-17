@@ -58,10 +58,11 @@ def load_config():
             'pruneSchedule': values['PRUNE_SCHEDULE'].split(';'),
             'fileFormat': values['FILE_FORMAT']
         }
-        if 'THUMBS_SIZE' in values or 'THUMBS_FILE_FORMAT' in values:
+        if 'THUMBS_SIZE' in values or 'THUMBS_FILE_FORMAT' in values or 'THUMBS_QUALITY' in values:
             o['thumbs'] = {
                 'size': list(map(lambda x: int(x) if x else 5000, values['THUMBS_SIZE'].split(','))),
-                'fileFormat': values['THUMBS_FILE_FORMAT']
+                'fileFormat': values['THUMBS_FILE_FORMAT'],
+                'quality': int(values.get('THUMBS_QUALITY', '75'))
             }
 
         records.append(o)
@@ -83,7 +84,7 @@ def record(record_config):
             dirname = os.path.dirname(thumbFilename)
             if not os.path.exists(dirname):
                 os.makedirs(dirname)
-            im.save(thumbFilename, "JPEG")
+            im.save(thumbFilename, "JPEG", quality=record_config['thumbs']['quality'], optimize=True, progressive=True)
             logging.info('Thumb end ; file {}'.format(thumbFilename), extra={'action': 'snapshot-thumb', 'status': 'success', 'record': record_config['name']})
         except Exception as e:
             logging.exception('Thumb error', extra={'action': 'snapshot-thumb', 'status': 'failure', 'record': record_config['name']})
