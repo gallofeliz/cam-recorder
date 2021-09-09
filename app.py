@@ -56,12 +56,12 @@ def load_config():
             'schedule': values['SCHEDULE'].split(';'),
             'keepTime': values['KEEP_TIME'], # None to disable ? We will see ...
             'pruneSchedule': values['PRUNE_SCHEDULE'].split(';'),
-            'fileFormat': values['FILE_FORMAT']
+            'fileFormat': os.path.join('/data', values['FILE_FORMAT'])
         }
         if 'THUMBS_SIZE' in values or 'THUMBS_FILE_FORMAT' in values or 'THUMBS_QUALITY' in values:
             o['thumbs'] = {
                 'size': list(map(lambda x: int(x) if x else 5000, values['THUMBS_SIZE'].split(','))),
-                'fileFormat': values['THUMBS_FILE_FORMAT'],
+                'fileFormat': os.path.join('/data', values['THUMBS_FILE_FORMAT']),
                 'quality': int(values.get('THUMBS_QUALITY', '75'))
             }
 
